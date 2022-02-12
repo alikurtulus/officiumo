@@ -1,6 +1,7 @@
 {
   "name": "officiumo",
   "version": "0.1.0",
+  "author": "Ali Kurtulush",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -10,6 +11,14 @@
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "aws-s3": "^2.0.5",
+    "axios": "^0.25.0",
+    "cookie": "^0.4.2",
+    "cookieparser": "^0.1.0",
+    "firebase": "^9.6.6",
+    "firebase-admin": "^10.0.2",
+    "json-schema": "^0.4.0",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
@@ -19,7 +28,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest --testPathIgnorePatterns cypress/*",
+    "acceptance-test": "cypress run --browser chrome",
+    "test:watch": "jest --runInBand --verbose --watchAll --testPathIgnorePatterns  cypress/*",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -39,5 +50,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^27.5.1",
+    "cypress": "^9.4.1",
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "sass": "^1.49.7",
+    "sass-loader": "^12.4.0"
   }
 }

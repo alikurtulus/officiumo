@@ -1,0 +1,8 @@
+{
+  "testFiles": "**/*.{feature,features}",
+  "chromeWebSecurity": false,
+  "retries": {
+    "runMode": 1
+  },
+  "video": false
+}
