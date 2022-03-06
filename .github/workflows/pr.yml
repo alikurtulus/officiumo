@@ -1,0 +1,52 @@
+name: Officiumo PR
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: npm install, gen
+        run: |
+          git config --global user.email "alikurtulus-92@hotmail.com"
+          git config --global user.name ${{ github.actor }}
+          npm install
+          npm test
+          npm run build --fail-on-error
+        env:
+          DISPATCH_TOKEN: ${{secrets.DISPATCH_TOKEN}}
+
+      - name: Bump version and push tag
+        id: version-bump
+        uses: anothrNick/github-tag-action@1.34.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          RELEASE_BRANCHES: master
+          DEFAULT_BUMP: patch
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: officiumo-${{ steps.version-bump.outputs.new_tag}}
+          path: |
+            dist
+            !dist/**/*.md
+      # - uses: actions/upload-artifact@v2
+      #   if: failure()
+      #   with:
+      #     name: cypress-screenshots
+      #     path: cypress/screenshots
+
+      # - name: Trigger deploy to Development
+      #   uses: peter-evans/repository-dispatch@v1
+      #   with:
+      #     token: ${{ secrets.CI_TOKEN }}
+      #     repository: Pwwgroup/phoenix-portal-deployment
+      #     event-type: trigger-dev-deploy
+      #     client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "head_ref": "${{github.head_ref}}"}'

@@ -1,0 +1,45 @@
+name: Officiumo Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set release version
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
+      - name: npm install, gen
+        env:
+          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+        run: |
+          git config --global user.email "alikurtulus-92@hotmail.com"
+          git config --global user.name ${{ github.actor }}
+          npm install
+          # npm run lint
+          # npm test --fail-on-error
+          npm run generate --fail-on-error
+
+      - name: Archive production artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: officiumo-${{ env.RELEASE_VERSION }}
+          path: |
+            dist
+            !dist/**/*.md
+
+      # - name: Trigger deploy to production
+      #   uses: peter-evans/repository-dispatch@v1
+      #   with:
+      #     token: ${{ secrets.CI_TOKEN }}
+      #     repository: Pwwgroup/phoenix-portal-deployment
+      #     event-type: trigger-production-deploy
+      #     client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
